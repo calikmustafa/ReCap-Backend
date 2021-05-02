@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,45 +24,106 @@ namespace WebAPI.Controllers
             _carService = carService;
         }
 
-        [HttpGet("getall")]
+        [HttpGet("GetAll")]
         public IActionResult GetAll()
         {
-           var result=_carService.GetAll();
-            if (result.Success==true)
+            var result = _carService.GetAll();
+            if (result.Success)
             {
                 return Ok(result);
             }
-            else
-            {
-                return BadRequest(result);
-            }
+            return BadRequest(result);
         }
-        [HttpGet("getbyid")]
-        public IActionResult GetById(int carid)
+
+        [HttpGet("GetCarsByBrandId")]
+        public IActionResult GetCarsByBrandId(int id)
         {
-           var result= _carService.GetById(carid);
-            if (result.Success==true)
+            var result = _carService.GetCarsByBrandId(id);
+            if (result.Success)
             {
-                return Ok(result.Data);
+                return Ok(result);
             }
-            else
-            {
-                return BadRequest(result.Message);
-            }
+            return BadRequest(result);
         }
-        [HttpPost("add")]
+
+        [HttpGet("GetCarsByColorId")]
+        public IActionResult GetCarsByColorId(int id)
+        {
+            var result = _carService.GetCarsByColorId(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("GetByDailyPrice")]
+        public IActionResult GetByDailyPrice(decimal min, decimal max)
+        {
+            var result = _carService.GetByDailyPrice(min, max);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("GetCarDetails")]
+        public IActionResult GetCarDetails()
+        {
+            var result = _carService.GetCarDetails();
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("GetById")]
+        public IActionResult GetById(int carId)
+        {
+            var result = _carService.GetById(carId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [ValidationAspect(typeof(CarValidator))]
+        [HttpPost("Add")]
         public IActionResult Add(Car car)
         {
-           var result=_carService.Add(car);
-            if (result.Success==true)
+            var result = _carService.Add(car);
+            if (result.Success)
             {
                 return Ok(result);
             }
-            else
-            {
-                return BadRequest(result);
-            }
+            return BadRequest(result);
         }
+
+        [HttpPost("Update")]
+        public IActionResult Update(Car car)
+        {
+            var result = _carService.Update(car);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPost("Delete")]
+        public IActionResult Delete(Car car)
+        {
+            var result = _carService.Delete(car);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
 
     }
 }
